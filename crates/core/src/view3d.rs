@@ -122,6 +122,75 @@ impl Frame {
     }
 }
 
+/// What exports write a solid as (`step_write.rs`): its element, its colour, and either its polygon faces,
+/// each turned out (counter-clockwise seen from outside), or, for a mesh, its triangles.
+pub(crate) enum Export {
+    Faces { owner: Id, color: Rgb, faces: Vec<Vec<P3>> },
+    Mesh { owner: Id, color: Rgb, tris: Vec<[P3; 3]> },
+}
+
+/// The model's solids as exports write them: a box, a slab or a prism as the exact polyhedron it
+/// is (a bottom, a top and a face for each side), a mesh as its triangles.
+pub(crate) fn export_solids(m: &Model) -> Vec<Export> {
+    // a ring and the same ring higher (or on another plane): bottom down, top up, sides out
+    fn polyhedron(bottom: Vec<P3>, top: Vec<P3>) -> Vec<Vec<P3>> {
+        let ring: Vec<P2> = bottom.iter().map(|p| P2(p[0], p[1])).collect();
+        let (bottom, top) = if geom::area(&ring) < 0.0 {
+            (bottom.into_iter().rev().collect::<Vec<_>>(), top.into_iter().rev().collect::<Vec<_>>())
+        } else {
+            (bottom, top)
+        };
+        let n = bottom.len();
+        let mut faces = vec![bottom.iter().rev().copied().collect::<Vec<_>>(), top.clone()];
+        for i in 0..n {
+            let j = (i + 1) % n;
+            faces.push(vec![bottom[i], bottom[j], top[j], top[i]]);
+        }
+        // a side whose top meets its bottom at a corner is a triangle; one of no height, nothing
+        faces
+            .into_iter()
+            .map(|f| {
+                let mut g: Vec<P3> = Vec::with_capacity(f.len());
+                for p in f {
+                    if g.last().is_none_or(|q: &P3| (q[0] - p[0]).abs() + (q[1] - p[1]).abs() + (q[2] - p[2]).abs() > 0.01) {
+                        g.push(p);
+                    }
+                }
+                while g.len() > 1
+                    && g.first().zip(g.last()).is_some_and(|(a, b)| (a[0] - b[0]).abs() + (a[1] - b[1]).abs() + (a[2] - b[2]).abs() <= 0.01)
+                {
+                    g.pop();
+                }
+                g
+            })
+            .filter(|g| g.len() >= 3)
+            .collect()
+    }
+    shaded(m)
+        .into_iter()
+        .map(|solid| match solid {
+            Solid::Box { owner, color, frame, a, c, z, .. } => {
+                let at = |a: f64, c: f64, z: f64| {
+                    let p = frame.o + frame.u * a + frame.n * c;
+                    [p.0, p.1, z]
+                };
+                let ring = |z: f64| vec![at(a.0, c.0, z), at(a.1, c.0, z), at(a.1, c.1, z), at(a.0, c.1, z)];
+                Export::Faces { owner, color, faces: polyhedron(ring(z.0), ring(z.1)) }
+            }
+            Solid::Slab { owner, color, face, rise, .. } => {
+                let top = face.iter().map(|p| [p[0], p[1], p[2] + rise]).collect();
+                Export::Faces { owner, color, faces: polyhedron(face, top) }
+            }
+            Solid::Prism { owner, color, ring, bottom, top, .. } => {
+                let b = ring.iter().map(|q| [q.0, q.1, bottom.at(*q)]).collect();
+                let t = ring.iter().map(|q| [q.0, q.1, top.at(*q)]).collect();
+                Export::Faces { owner, color, faces: polyhedron(b, t) }
+            }
+            Solid::Mesh { owner, color, tris, .. } => Export::Mesh { owner, color, tris },
+        })
+        .collect()
+}
+
 /// A solid of the model: a box (a door's leaf, a window's glass, a stair's step); a slab: a flat
 /// face, level or sloped, and what lies up to `rise` mm above it (a floor, a column, a roof's
 /// slope); a prism: a ring in plan from one plane up to another (a wall's part; of a curved wall,

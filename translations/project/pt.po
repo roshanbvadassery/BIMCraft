@@ -75,7 +75,7 @@ msgstr "Bloco de concreto"
 msgid "Copper"
 msgstr "Cobre"
 
-#: crates/core/src/commands.rs:790
+#: crates/core/src/commands.rs:792
 msgid "Copy"
 msgstr "Cópia"
 
@@ -103,7 +103,7 @@ msgstr "Traço e ponto"
 msgid "Data Outlet"
 msgstr "Ponto de dados"
 
-#: crates/core/src/commands.rs:5547
+#: crates/core/src/commands.rs:5568
 msgid "Dependent"
 msgstr "Dependente"
 
@@ -159,8 +159,8 @@ msgstr "Leste"
 msgid "Elbow 90"
 msgstr "Joelho 90"
 
-#: crates/core/src/commands.rs:5331
-#: crates/core/src/commands.rs:6970
+#: crates/core/src/commands.rs:5352
+#: crates/core/src/commands.rs:6991
 msgid "Elevation"
 msgstr "Elevação"
 
@@ -268,7 +268,7 @@ msgstr "Largura da perna"
 msgid "Length"
 msgstr "Comprimento"
 
-#: crates/core/src/commands.rs:3397
+#: crates/core/src/commands.rs:3418
 #: crates/core/src/model.rs:2069
 msgid "Level"
 msgstr "Nível"
@@ -289,7 +289,7 @@ msgstr "Marca"
 msgid "Masking"
 msgstr "Máscara"
 
-#: crates/core/src/commands.rs:4241
+#: crates/core/src/commands.rs:4262
 msgid "Mass"
 msgstr "Massa"
 
@@ -369,7 +369,7 @@ msgstr "Reboco"
 msgid "Porcelain"
 msgstr "Porcelana"
 
-#: crates/core/src/commands.rs:1878
+#: crates/core/src/commands.rs:1880
 msgid "Project"
 msgstr "Projeto"
 
@@ -393,7 +393,7 @@ msgstr "Espelhos"
 msgid "Roof tiles"
 msgstr "Telhas"
 
-#: crates/core/src/commands.rs:4466
+#: crates/core/src/commands.rs:4487
 msgid "Room"
 msgstr "Ambiente"
 
@@ -421,8 +421,8 @@ msgstr "Contrapiso"
 msgid "Seat Height"
 msgstr "Altura do assento"
 
-#: crates/core/src/commands.rs:5308
-#: crates/core/src/commands.rs:6969
+#: crates/core/src/commands.rs:5329
+#: crates/core/src/commands.rs:6990
 msgid "Section"
 msgstr "Corte"
 
@@ -522,7 +522,7 @@ msgstr "Tipo"
 msgid "UP"
 msgstr "SOBE"
 
-#: crates/core/src/commands.rs:5688
+#: crates/core/src/commands.rs:5709
 msgid "Unnamed"
 msgstr "Sem nome"
 
@@ -542,7 +542,7 @@ msgstr "Volume"
 msgid "WC"
 msgstr "Vaso sanitário"
 
-#: crates/core/src/commands.rs:179
+#: crates/core/src/commands.rs:181
 msgid "Wall"
 msgstr "Parede"
 

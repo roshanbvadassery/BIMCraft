@@ -75,7 +75,7 @@ msgstr "Bloque de hormigón"
 msgid "Copper"
 msgstr "Cobre"
 
-#: crates/core/src/commands.rs:790
+#: crates/core/src/commands.rs:792
 msgid "Copy"
 msgstr "Copia"
 
@@ -103,7 +103,7 @@ msgstr "Trazo y punto"
 msgid "Data Outlet"
 msgstr "Punto de datos"
 
-#: crates/core/src/commands.rs:5547
+#: crates/core/src/commands.rs:5568
 msgid "Dependent"
 msgstr "Dependiente"
 
@@ -159,8 +159,8 @@ msgstr "Este"
 msgid "Elbow 90"
 msgstr "Codo 90"
 
-#: crates/core/src/commands.rs:5331
-#: crates/core/src/commands.rs:6970
+#: crates/core/src/commands.rs:5352
+#: crates/core/src/commands.rs:6991
 msgid "Elevation"
 msgstr "Elevación"
 
@@ -268,7 +268,7 @@ msgstr "Ancho de la pata"
 msgid "Length"
 msgstr "Longitud"
 
-#: crates/core/src/commands.rs:3397
+#: crates/core/src/commands.rs:3418
 #: crates/core/src/model.rs:2069
 msgid "Level"
 msgstr "Nivel"
@@ -289,7 +289,7 @@ msgstr "Marca"
 msgid "Masking"
 msgstr "Máscara"
 
-#: crates/core/src/commands.rs:4241
+#: crates/core/src/commands.rs:4262
 msgid "Mass"
 msgstr "Masa"
 
@@ -369,7 +369,7 @@ msgstr "Enlucido"
 msgid "Porcelain"
 msgstr "Porcelana"
 
-#: crates/core/src/commands.rs:1878
+#: crates/core/src/commands.rs:1880
 msgid "Project"
 msgstr "Proyecto"
 
@@ -393,7 +393,7 @@ msgstr "Contrahuellas"
 msgid "Roof tiles"
 msgstr "Tejas"
 
-#: crates/core/src/commands.rs:4466
+#: crates/core/src/commands.rs:4487
 msgid "Room"
 msgstr "Habitación"
 
@@ -421,8 +421,8 @@ msgstr "Recrecido"
 msgid "Seat Height"
 msgstr "Altura del asiento"
 
-#: crates/core/src/commands.rs:5308
-#: crates/core/src/commands.rs:6969
+#: crates/core/src/commands.rs:5329
+#: crates/core/src/commands.rs:6990
 msgid "Section"
 msgstr "Sección"
 
@@ -522,7 +522,7 @@ msgstr "Tipo"
 msgid "UP"
 msgstr "SUBE"
 
-#: crates/core/src/commands.rs:5688
+#: crates/core/src/commands.rs:5709
 msgid "Unnamed"
 msgstr "Sin nombre"
 
@@ -542,7 +542,7 @@ msgstr "Volumen"
 msgid "WC"
 msgstr "Inodoro"
 
-#: crates/core/src/commands.rs:179
+#: crates/core/src/commands.rs:181
 msgid "Wall"
 msgstr "Muro"
 

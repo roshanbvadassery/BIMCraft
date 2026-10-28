@@ -107,7 +107,9 @@ pub static ALL: &[Command] = &[
     other(
         "save",
         "Save",
-        "{path?, hide?} .bimcraft saves the project (Save As with a path); .ifc exports IFC4; .glb exports the 3D model (glTF, metres, y up, a node per category; `hide`: [category, …] left out, as a frame without its walls); .svg or .png exports the lowest level's \
+        "{path?, hide?, view?} .bimcraft saves the project (Save As with a path); .ifc exports IFC4; .glb exports the 3D model (glTF, metres, y up, a node per category; `hide`: [category, …] left out, as a frame without its walls); .stl the same as one mesh (mm); .step (or .stp) each \
+         element as a coloured STEP AP214 solid, planar faces exact (mm; `hide` too); .dxf the plan of level `view` (the lowest \
+         by default) as DXF R12, a layer per category, in mm; .svg or .png exports the lowest level's \
          plan; .pdf prints every sheet, a page each",
         save,
     ),
@@ -2192,6 +2194,25 @@ fn save(s: &mut Session, p: &Value) -> R {
         let bytes = crate::glb::export(&crate::link::seen(&s.model), &hide).map_err(|e| bad(c, e))?;
         std::fs::write(&path, &bytes).map_err(|e| bad(c, format!("{}: {e}", path.display())))?;
         return Ok(json!({"path": path, "format": "glTF", "bytes": bytes.len()}));
+    }
+    if format == "stl" {
+        let hide = drawn_categories(c, p, "hide")?;
+        let bytes = crate::stl::export(&crate::link::seen(&s.model), &hide).map_err(|e| bad(c, e))?;
+        std::fs::write(&path, &bytes).map_err(|e| bad(c, format!("{}: {e}", path.display())))?;
+        return Ok(json!({"path": path, "format": "STL", "triangles": bytes.len().saturating_sub(84) / 50}));
+    }
+    if matches!(format.as_str(), "step" | "stp") {
+        let hide = drawn_categories(c, p, "hide")?;
+        let text = crate::step_write::export(&crate::link::seen(&s.model), &hide).map_err(|e| bad(c, e))?;
+        std::fs::write(&path, &text).map_err(|e| bad(c, format!("{}: {e}", path.display())))?;
+        return Ok(json!({"path": path, "format": "STEP AP214", "bytes": text.len()}));
+    }
+    if format == "dxf" {
+        let seen = crate::link::seen(&s.model);
+        let level = level_param(c, &seen, p, "view")?;
+        let text = crate::dxf_write::plan(&render::plan(&seen, level, 1600, 1000), &seen);
+        std::fs::write(&path, &text).map_err(|e| bad(c, format!("{}: {e}", path.display())))?;
+        return Ok(json!({"path": path, "format": "DXF", "bytes": text.len()}));
     }
     if format == "pdf" {
         let seen = crate::link::seen(&s.model);

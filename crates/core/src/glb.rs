@@ -21,34 +21,50 @@ struct Run {
     normals: Vec<[f32; 3]>,
 }
 
-/// The model as a `.glb` file, leaving out the categories in `hide` (as `category` names them: `wall`,
-/// `floor`…), as a frame is shown without the panels round it.
-pub fn export(m: &Model, hide: &[String]) -> Result<Vec<u8>, String> {
+/// A shaded triangle as the 3D exports take it: corners (mm, z up), its element's category and its colour.
+pub(crate) struct Tri {
+    pub p: [[f64; 3]; 3],
+    pub category: &'static str,
+    pub color: Rgb,
+}
+
+/// The model's shaded triangles with area, leaving out the categories in `hide`: what `.glb`, `.stl`
+/// and `.step` are written from. Refused when there are none or more than [`MAX_TRIS`].
+pub(crate) fn triangles(m: &Model, hide: &[String]) -> Result<Vec<Tri>, String> {
     let scene = Scene::new(m);
-    // category → colour → triangles.
-    let mut by: BTreeMap<String, BTreeMap<(u8, u8, u8), Run>> = BTreeMap::new();
-    let mut count = 0usize;
-    for (p, owner, Rgb(r, g, b)) in scene.triangles() {
-        let n = normal(&p);
-        if n == [0.0; 3] {
+    let mut out = Vec::new();
+    for (p, owner, color) in scene.triangles() {
+        if normal(&p) == [0.0; 3] {
             continue;
         }
         let category = m.elements.get(owner).map_or("other", |e| e.category());
         if hide.iter().any(|h| h == category) {
             continue;
         }
-        count += 1;
-        if count > MAX_TRIS {
+        if out.len() >= MAX_TRIS {
             return Err(format!("the model has more than {MAX_TRIS} triangles; hide some categories or levels first"));
         }
-        let run = by.entry(category.to_owned()).or_default().entry((r, g, b)).or_default();
-        for q in p {
+        out.push(Tri { p, category, color });
+    }
+    if out.is_empty() {
+        return Err("there is nothing in 3D to export; the model has no shaded elements (or `hide` leaves none)".into());
+    }
+    Ok(out)
+}
+
+/// The model as a `.glb` file, leaving out the categories in `hide` (as `category` names them: `wall`,
+/// `floor`…), as a frame is shown without the panels round it.
+pub fn export(m: &Model, hide: &[String]) -> Result<Vec<u8>, String> {
+    // category → colour → triangles.
+    let mut by: BTreeMap<String, BTreeMap<(u8, u8, u8), Run>> = BTreeMap::new();
+    for t in triangles(m, hide)? {
+        let n = normal(&t.p);
+        let Rgb(r, g, b) = t.color;
+        let run = by.entry(t.category.to_owned()).or_default().entry((r, g, b)).or_default();
+        for q in t.p {
             run.positions.push(gl(q));
             run.normals.push(n);
         }
-    }
-    if count == 0 {
-        return Err("there is nothing in 3D to export; the model has no shaded elements (or `hide` leaves none)".into());
     }
 
     let mut bin: Vec<u8> = Vec::new();
