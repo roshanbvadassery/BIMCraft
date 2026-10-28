@@ -1657,18 +1657,54 @@ fn draw_plan(m: &Model, plan: impl Key, view: View, up: bool, k: f32, n: f64, ti
             }
             Element::Room(r) if r.level == level && inside(r.point) && !up => {
                 let lines = bounding.get_or_init(|| m.bounding_lines(level));
-                let area = geom::region_at(lines, r.point, TOL).map_or_else(
+                let region = geom::region_at(lines, r.point, TOL);
+                let area = region.as_ref().map_or_else(
                     || m.language.word(msg!("NOT ENCLOSED")).to_string(),
                     |g| {
                         let (area, unit) = m.units.area(g.area());
                         format!("{area:.2} {unit}")
                     },
                 );
+                // The tag fits its room: as drawn in a room with space for it; in a narrow one its name a word a
+                // line, then smaller (to a third), without its number when tight, so neighbours' tags don't run together.
+                let room_px = region.as_ref().map(|g| {
+                    let (lo, hi) = g.outer.iter().fold((P2(f64::MAX, f64::MAX), P2(f64::MIN, f64::MIN)), |(lo, hi), p| {
+                        (P2(lo.0.min(p.0), lo.1.min(p.1)), P2(hi.0.max(p.0), hi.1.max(p.1)))
+                    });
+                    // in the tag's own pixels: `grow` scales it by the view's annotation size afterwards
+                    let ak = d.k.max(1e-3);
+                    (((hi.0 - lo.0) * d.view.scale) as f32 / ak, ((hi.1 - lo.1) * d.view.scale) as f32 / ak)
+                });
+                let fit_of = |name_lines: &[&str], with_number: bool| {
+                    room_px.map_or(1.0f32, |(w, h)| {
+                        let wide = name_lines.iter().map(|l| font::width(l, 13.0)).fold(font::width(&area, 10.0), f32::max);
+                        let tall = 16.0 * name_lines.len() as f32 + if with_number { 28.0 } else { 14.0 };
+                        (0.9 * w / wide.max(1.0)).min(0.9 * h / tall).min(1.0)
+                    })
+                };
+                let whole = [r.name.as_str()];
+                let words: Vec<&str> = r.name.split_whitespace().collect();
+                let (name_lines, with_number): (&[&str], bool) = if fit_of(&whole, true) >= 0.7 {
+                    (&whole, true)
+                } else if words.len() > 1 && fit_of(&words, false) > fit_of(&whole, false) {
+                    (&words, false)
+                } else {
+                    (&whole, false)
+                };
+                let k = fit_of(name_lines, with_number).max(0.35);
                 let (x, y) = d.view.px(r.point);
                 let from = d.prims.len();
-                d.text(&r.name, (x, y - 16.0), 13.0, INK);
-                d.text(&r.number, (x, y), 10.0, INK);
-                d.text(&area, (x, y + 14.0), 10.0, INK);
+                let n = name_lines.len() as f32;
+                let mut at = y - (16.0 * n + if with_number { 28.0 } else { 14.0 }) * k / 2.0 + 8.0 * k;
+                for line in name_lines {
+                    d.text(line, (x, at), 13.0 * k, INK);
+                    at += 16.0 * k;
+                }
+                if with_number {
+                    d.text(&r.number, (x, at - 2.0 * k), 10.0 * k, INK);
+                    at += 14.0 * k;
+                }
+                d.text(&area, (x, at - 2.0 * k), 10.0 * k, INK);
                 d.grow(from, (x, y));
             }
             // A shaft the plane cuts: its outline, and a cross.
@@ -3219,6 +3255,34 @@ mod tests {
         let (a, b) = (at(7000.0, 2000.0), at(9000.0, 4000.0));
         assert_eq!(d.in_box(a, b, false), [100007], "a window selects what is all inside");
         assert_eq!(d.in_box(b, a, true), [100003, 100007], "a crossing box also what it touches");
+    }
+
+    #[test]
+    fn a_room_tag_shrinks_to_fit_a_narrow_room() {
+        let mut s = Session::new();
+        s.script(
+            "new {}\nwall {\"points\": [[0, 0], [6000, 0], [6000, 4000], [0, 4000]], \"closed\": true}\n\
+             wall {\"points\": [[1000, 0], [1000, 4000]]}\nroom {\"point\": [500, 2000], \"name\": \"DRESSING ROOM\"}\n\
+             room {\"point\": [3500, 2000], \"name\": \"DRESSING ROOM\"}",
+        )
+        .unwrap();
+        let d = plan(&s.model, 100000, 800, 600);
+        let rooms: Vec<Id> = s.model.elements.iter().filter(|(_, e)| e.category() == "room").map(|(id, _)| *id).collect();
+        let span = |room: Id| {
+            let xs: Vec<f32> = d
+                .prims
+                .iter()
+                .zip(&d.owners)
+                .filter(|(p, o)| **o == Some(room) && matches!(p, Prim::Line { .. }))
+                .flat_map(|(p, _)| p.points())
+                .map(|(x, _)| x)
+                .collect();
+            xs.iter().copied().fold(f32::MIN, f32::max) - xs.iter().copied().fold(f32::MAX, f32::min)
+        };
+        let (narrow, wide) = (span(rooms[0]), span(rooms[1]));
+        let room_px = (1000.0 - 100.0) * d.view.scale as f32;
+        assert!(narrow < room_px, "the narrow room's lettering ({narrow} px) fits inside it ({room_px} px)");
+        assert!(wide > narrow, "the wide room's tag is drawn full size");
     }
 
     #[test]

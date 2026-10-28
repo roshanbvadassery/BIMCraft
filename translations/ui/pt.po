@@ -1659,7 +1659,7 @@ msgstr "Plano de corte"
 msgid "Cylinder"
 msgstr "Cilindro"
 
-#: crates/core/src/render.rs:2339
+#: crates/core/src/render.rs:2375
 msgid "DN"
 msgstr "DESCE"
 
@@ -3610,7 +3610,7 @@ msgstr "Várias categorias"
 msgid "Multiple Categories ({})"
 msgstr "Várias categorias ({})"
 
-#: crates/core/src/render.rs:1661
+#: crates/core/src/render.rs:1662
 msgid "NOT ENCLOSED"
 msgstr "NÃO DELIMITADO"
 
@@ -6161,7 +6161,7 @@ msgstr "Tipo:"
 msgid "Types"
 msgstr "Tipos"
 
-#: crates/core/src/render.rs:2339
+#: crates/core/src/render.rs:2375
 msgid "UP"
 msgstr "SOBE"
 
