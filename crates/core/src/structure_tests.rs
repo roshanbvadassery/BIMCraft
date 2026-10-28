@@ -725,3 +725,20 @@ fn a_project_whose_run_type_is_round_and_not_as_deep_as_it_is_wide_is_refused() 
     }
     assert!(m.check().unwrap_err().contains("library"));
 }
+
+#[test]
+fn a_beam_takes_its_parameters_as_it_is_made() {
+    let mut s = Session::new();
+    run(&mut s, "parameter", json!({"name": "Studs", "kind": "number", "categories": ["beam"]}));
+    let made = run(&mut s, "beam", json!({"points": [[0, 0], [5000, 0], [5000, 4000]], "params": {"Studs": 38}}));
+    let ids = made["ids"].as_array().unwrap();
+    assert_eq!(ids.len(), 2, "a beam for each segment, each with the parameter");
+    let table = run(
+        &mut s,
+        "schedule",
+        json!({"name": "B", "category": "beams", "fields": ["Studs", "Count"], "grouped": true, "sort": ["Studs"]}),
+    );
+    assert_eq!(table["rows"], json!([[38, 2.0]]));
+    assert!(s.execute("beam", &json!({"points": [[0, 0], [1000, 0]], "params": {"Nope": 1}})).is_err(), "an unknown parameter is refused");
+    assert_eq!(s.model.elements.iter().filter(|(_, e)| e.category() == "beam").count(), 2, "and nothing is left of it");
+}

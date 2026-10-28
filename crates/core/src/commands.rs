@@ -379,7 +379,7 @@ pub static ALL: &[Command] = &[
         "beam",
         ui_msg!("Beam"),
         &["BM"],
-        "{points: [[x,y],…], closed?, type?, level?, offset?, end_offset?, justify?: top|centre|bottom, system?} a beam for each \
+        "{points: [[x,y],…], closed?, type?, level?, offset?, end_offset?, justify?: top|centre|bottom, system?, params?: {parameter: value}} a beam for each \
          segment of the points: its section the type's (category beam: `width` across, `depth` deep, or round), its `justify` \
          line (top by default) `offset` mm over the level at its start (0: at the level, so it hangs below) and `end_offset` at \
          its end (the same: level), for a single segment; `system` names the system it belongs to. It slopes up to 75°",
@@ -706,8 +706,8 @@ pub static ALL: &[Command] = &[
         "Project Parameters",
         &[],
         "{name, kind?: text|number|length|yesno, categories?: [wall|floor|ceiling|roof|door|window|room|column|component|stair|\
-         ramp|railing|mass, …], rename?, delete?: true} a project parameter, as Revit's Manage > Project Parameters makes one: a value \
-         of its kind each element of its categories may have of its own, set with `modify {id, params: {name: value}}` (lengths \
+         ramp|railing|mass|structuralcolumn|footing|beam|stripfooting|pipe…, any model category], rename?, delete?: true} a project parameter, as Revit's Manage > Project Parameters makes one: a value \
+         of its kind each element of its categories may have of its own, set with `modify {id, params: {name: value}}` or, for a beam or another run, `params` as it is made (lengths \
          in mm, yes or no as true or false). Off a category, that category's elements lose their values of it; deleted, every \
          element does; renamed, they follow it. `inspect` lists them",
         parameter,
@@ -4757,6 +4757,11 @@ fn chain(s: &mut Session, p: &Value, category: &str) -> R {
     let made = runs_of(&s.model, p, category)?;
     let m = s.model_mut();
     let ids: Vec<Id> = made.into_iter().map(|e| m.insert(e)).collect();
+    // Project parameters given as it is made (`params`: {name: value}) go through `modify`, which
+    // checks them; a script keeps a beam's studs and camber on the line that makes it.
+    if let Some(params) = p.get("params").filter(|v| !v.is_null()) {
+        modify(s, &json!({"ids": ids, "params": params}))?;
+    }
     Ok(json!({"ids": ids}))
 }
 
