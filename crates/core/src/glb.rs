@@ -21,8 +21,9 @@ struct Run {
     normals: Vec<[f32; 3]>,
 }
 
-/// The model as a `.glb` file.
-pub fn export(m: &Model) -> Result<Vec<u8>, String> {
+/// The model as a `.glb` file, leaving out the categories in `hide` (as `category` names them: `wall`,
+/// `floor`…), as a frame is shown without the panels round it.
+pub fn export(m: &Model, hide: &[String]) -> Result<Vec<u8>, String> {
     let scene = Scene::new(m);
     // category → colour → triangles.
     let mut by: BTreeMap<String, BTreeMap<(u8, u8, u8), Run>> = BTreeMap::new();
@@ -32,19 +33,22 @@ pub fn export(m: &Model) -> Result<Vec<u8>, String> {
         if n == [0.0; 3] {
             continue;
         }
+        let category = m.elements.get(owner).map_or("other", |e| e.category());
+        if hide.iter().any(|h| h == category) {
+            continue;
+        }
         count += 1;
         if count > MAX_TRIS {
             return Err(format!("the model has more than {MAX_TRIS} triangles; hide some categories or levels first"));
         }
-        let category = m.elements.get(owner).map_or("other", |e| e.category()).to_owned();
-        let run = by.entry(category).or_default().entry((r, g, b)).or_default();
+        let run = by.entry(category.to_owned()).or_default().entry((r, g, b)).or_default();
         for q in p {
             run.positions.push(gl(q));
             run.normals.push(n);
         }
     }
     if count == 0 {
-        return Err("there is nothing in 3D to export; the model has no shaded elements".into());
+        return Err("there is nothing in 3D to export; the model has no shaded elements (or `hide` leaves none)".into());
     }
 
     let mut bin: Vec<u8> = Vec::new();
@@ -184,7 +188,7 @@ mod tests {
     fn the_sample_house_exports_as_a_valid_glb_by_category() {
         let mut s = Session::new();
         s.script(crate::sample::SAMPLE).unwrap();
-        let glb = super::export(&s.model).unwrap();
+        let glb = super::export(&s.model, &[]).unwrap();
         assert_eq!(&glb[..4], b"glTF");
         assert_eq!(u32_at(&glb, 8), glb.len(), "the header's length is the file's");
         let json_len = u32_at(&glb, 12);
@@ -208,7 +212,26 @@ mod tests {
     #[test]
     fn an_empty_model_says_there_is_nothing_to_export() {
         let s = Session::new();
-        assert!(super::export(&s.model).is_err());
+        assert!(super::export(&s.model, &[]).is_err());
+    }
+
+    fn mesh_names(glb: &[u8]) -> Vec<String> {
+        let json_len = u32_at(glb, 12);
+        let doc: Value = serde_json::from_slice(&glb[20..20 + json_len]).unwrap();
+        doc["meshes"].as_array().unwrap().iter().filter_map(|m| m["name"].as_str().map(str::to_owned)).collect()
+    }
+
+    #[test]
+    fn save_leaves_out_the_categories_it_hides() {
+        let mut s = Session::new();
+        s.script(crate::sample::SAMPLE).unwrap();
+        let path = std::env::temp_dir().join(format!("bimcraft-test-{}-frame.glb", std::process::id()));
+        s.execute("save", &serde_json::json!({"path": path, "hide": ["Walls", "roof"]})).unwrap();
+        let names = mesh_names(&std::fs::read(&path).unwrap());
+        assert!(!names.iter().any(|n| n == "wall" || n == "roof"), "{names:?}");
+        assert!(names.iter().any(|n| n == "floor"), "{names:?}");
+        let _ = std::fs::remove_file(&path);
+        assert!(s.execute("save", &serde_json::json!({"path": path, "hide": ["wombats"]})).is_err(), "an unknown category is refused");
     }
 
     #[test]
