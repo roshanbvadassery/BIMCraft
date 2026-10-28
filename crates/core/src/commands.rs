@@ -1104,9 +1104,10 @@ pub static ALL: &[Command] = &[
         "units",
         "Project Units",
         &["UN"],
-        "{length?: mm|cm|m|in|ft|ft-in} how drawings, schedules and the desktop show lengths, and read typed ones: \
-         millimetres, centimetres, metres, fractional inches, decimal feet, or feet and fractional inches (to 1/16\"); areas \
-         in m², or ft² with inches and feet. The model, and every command, keep millimetres",
+        "{length?: mm|cm|m|in|ft|ft-in, room_area?: centre|finish} how drawings, schedules and the desktop show lengths, and read \
+         typed ones: millimetres, centimetres, metres, fractional inches, decimal feet, or feet and fractional inches (to 1/16\"); \
+         areas in m², or ft² with inches and feet. The model, and every command, keep millimetres. `room_area`: rooms measured at \
+         the walls' centre lines (the default) or at their finish faces, the carpet area (Revit's Area and Volume Computations)",
         units,
     ),
     edit(
@@ -7709,7 +7710,18 @@ fn units(s: &mut Session, p: &Value) -> R {
             s.model_mut().units = u;
         }
     }
-    Ok(json!({"length": s.model.units.name()}))
+    if let Some(name) = string(c, p, "room_area")? {
+        let a = match name.as_str() {
+            "centre" | "center" => crate::model::RoomArea::Centre,
+            "finish" => crate::model::RoomArea::Finish,
+            other => return Err(bad(c, format!("`room_area` is centre or finish, not `{other}`"))),
+        };
+        if a != s.model.room_area {
+            s.model_mut().room_area = a;
+        }
+    }
+    let area = if s.model.room_area == crate::model::RoomArea::Finish { "finish" } else { "centre" };
+    Ok(json!({"length": s.model.units.name(), "room_area": area}))
 }
 
 /// `kind` `from` is called `to` now: its library entry, and everything that names it.

@@ -742,3 +742,16 @@ fn a_beam_takes_its_parameters_as_it_is_made() {
     assert!(s.execute("beam", &json!({"points": [[0, 0], [1000, 0]], "params": {"Nope": 1}})).is_err(), "an unknown parameter is refused");
     assert_eq!(s.model.elements.iter().filter(|(_, e)| e.category() == "beam").count(), 2, "and nothing is left of it");
 }
+
+#[test]
+fn rooms_can_be_measured_at_the_wall_finish_the_carpet_area() {
+    let mut s = Session::new();
+    s.script("new {}\nwall {\"points\": [[0, 0], [4000, 0], [4000, 3000], [0, 3000]], \"closed\": true, \"type\": \"Interior - 100mm\"}\nroom {\"point\": [2000, 1500]}").unwrap();
+    let area = |s: &mut Session| run(s, "elements", json!({"category": "room"}))["elements"][0]["area_m2"].as_f64().unwrap();
+    assert_eq!(area(&mut s), 12.0, "at the centre lines: 4 x 3 m");
+    run(&mut s, "units", json!({"room_area": "finish"}));
+    assert_eq!(area(&mut s), 11.31, "inside the 100 mm walls: 3.9 x 2.9 m");
+    assert!(s.execute("units", &json!({"room_area": "outside"})).is_err());
+    let back = crate::model::Model::read(&s.model.to_json().unwrap()).unwrap();
+    assert_eq!(back.0.room_area, crate::model::RoomArea::Finish, "kept in the file");
+}

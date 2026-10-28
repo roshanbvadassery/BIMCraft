@@ -622,7 +622,7 @@ msgstr "Linha de limite: desenhar a projeção do telhado, no nível acima, e os
 msgid "Boundary Line: sketch the shaft opening's outline"
 msgstr "Linha de limite: desenhar o contorno do shaft"
 
-#: crates/core/src/model.rs:1937
+#: crates/core/src/model.rs:1959
 msgid "Brick"
 msgstr "Tijolo"
 
@@ -801,7 +801,7 @@ msgstr "Centro"
 msgid "Centre Lines"
 msgstr "Linhas de eixo"
 
-#: crates/core/src/model.rs:1945
+#: crates/core/src/model.rs:1967
 msgid "Ceramic tile"
 msgstr "Cerâmica"
 
@@ -1392,7 +1392,7 @@ msgstr "Massa conceitual"
 msgid "Concrete"
 msgstr "Concreto"
 
-#: crates/core/src/model.rs:1939
+#: crates/core/src/model.rs:1961
 msgid "Concrete block"
 msgstr "Bloco de concreto"
 
@@ -1449,7 +1449,7 @@ msgstr "{} GlobalIds IFC copiados."
 msgid "Copied {} rows, tab-separated."
 msgstr "{} linhas copiadas, separadas por tabulação."
 
-#: crates/core/src/model.rs:1953
+#: crates/core/src/model.rs:1975
 msgid "Copper"
 msgstr "Cobre"
 
@@ -1796,7 +1796,7 @@ msgstr "Demolir (DW): clique num elemento para demoli-lo na fase da vista; cliqu
 msgid "Demolished"
 msgstr "Demolido"
 
-#: crates/core/src/commands.rs:5568
+#: crates/core/src/commands.rs:5569
 msgid "Dependent"
 msgstr "Dependente"
 
@@ -2170,7 +2170,7 @@ msgstr "Equipamento elétrico"
 msgid "Electrical Equipment (EE): a distribution board, where you click on the wall; Space turns it"
 msgstr "Equipamento elétrico (EE): um quadro de distribuição, onde você clicar na parede; Espaço gira"
 
-#: crates/core/src/commands.rs:1319
+#: crates/core/src/commands.rs:1320
 msgid "Elements"
 msgstr "Elementos"
 
@@ -2733,7 +2733,7 @@ msgstr "Grupo"
 msgid "Group:"
 msgstr "Grupo:"
 
-#: crates/core/src/model.rs:1944
+#: crates/core/src/model.rs:1966
 msgid "Gypsum board"
 msgstr "Placa de gesso"
 
@@ -3459,7 +3459,7 @@ msgstr "Maximizar"
 msgid "Maximum Riser Height"
 msgstr "Altura máxima do espelho"
 
-#: crates/core/src/commands.rs:1272
+#: crates/core/src/commands.rs:1273
 msgid "Measure"
 msgstr "Medir"
 
@@ -4978,7 +4978,7 @@ msgstr "Telhado por face (RB): um telhado na face superior das massas selecionad
 msgid "Roof by Footprint: click inside the walls to roof them, on the level above"
 msgstr "Telhado por perímetro: clique dentro das paredes para cobri-las, no nível acima"
 
-#: crates/core/src/model.rs:1946
+#: crates/core/src/model.rs:1968
 msgid "Roof tiles"
 msgstr "Telhas"
 
@@ -5084,7 +5084,7 @@ msgstr "Escala: o papel que esta vista representa, 1 : n do modelo: sua anotaç�
 msgid "Scan"
 msgstr "Escaneamento"
 
-#: crates/core/src/commands.rs:1135
+#: crates/core/src/commands.rs:1136
 msgid "Schedule"
 msgstr "Tabela"
 
@@ -5114,7 +5114,7 @@ msgstr "Tabelas"
 msgid "Schedules/Quantities (all)"
 msgstr "Tabelas/quantitativos (todas)"
 
-#: crates/core/src/model.rs:1942
+#: crates/core/src/model.rs:1964
 msgid "Screed"
 msgstr "Contrapiso"
 
@@ -6227,7 +6227,7 @@ msgstr "Reexibir elementos"
 msgid "Units"
 msgstr "Unidades"
 
-#: crates/core/src/commands.rs:5709
+#: crates/core/src/commands.rs:5710
 msgid "Unnamed"
 msgstr "Sem nome"
 

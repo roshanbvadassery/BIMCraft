@@ -1797,6 +1797,23 @@ impl ProjectParameter {
     }
 }
 
+/// Where room areas are measured ([`Model::room_area`]).
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum RoomArea {
+    /// At the walls' centre lines.
+    #[default]
+    Centre,
+    /// At the walls' finish faces: the carpet area.
+    Finish,
+}
+
+impl RoomArea {
+    pub fn is_centre(&self) -> bool {
+        *self == RoomArea::Centre
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Model {
@@ -1809,6 +1826,10 @@ pub struct Model {
     /// How lengths and areas are shown and typed; the model itself is in millimetres.
     #[serde(default)]
     pub units: Units,
+    /// Where room areas are measured: at the walls' centre lines (the default) or at their finish faces
+    /// (the carpet area), as Revit's Area and Volume Computations say.
+    #[serde(default, skip_serializing_if = "RoomArea::is_centre")]
+    pub room_area: RoomArea,
     /// What its drawings say, and the names commands give.
     #[serde(default)]
     pub language: Language,
@@ -1906,6 +1927,7 @@ impl Model {
             name: name.into(),
             uid: fresh_uid(),
             units: Units::default(),
+            room_area: RoomArea::default(),
             language,
             next_id: FIRST_ID,
             types: Types::default(),
@@ -3805,9 +3827,22 @@ impl Model {
     }
 
     /// A room's boundary, from the walls around its point. `None` when it isn't enclosed.
-    /// Areas are measured at the wall centre lines (Revit's "At wall centerline" setting).
+    /// Measured at the wall centre lines, or at their faces when the project says `finish` ([`Model::room_area`]).
     pub fn room_region(&self, r: &Room) -> Option<Region> {
-        geom::region_at(&self.bounding_lines(r.level), r.point, TOL)
+        geom::region_at(&self.room_lines(r.level), r.point, TOL)
+    }
+
+    /// The lines rooms on `level` are bounded by, as [`Model::room_area`] says: the walls' centre lines or their
+    /// faces, and the room separation lines.
+    pub fn room_lines(&self, level: impl Key) -> Vec<(P2, P2)> {
+        match self.room_area {
+            RoomArea::Centre => self.bounding_lines(level),
+            RoomArea::Finish => {
+                let mut lines = self.face_lines(level);
+                lines.extend(self.separators(level));
+                lines
+            }
+        }
     }
 
     /// What a detail line, a filled region or a text note must be, wherever it is: in a view or in a detail group.

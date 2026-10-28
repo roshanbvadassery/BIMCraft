@@ -1656,7 +1656,7 @@ fn draw_plan(m: &Model, plan: impl Key, view: View, up: bool, k: f32, n: f64, ti
                 }
             }
             Element::Room(r) if r.level == level && inside(r.point) && !up => {
-                let lines = bounding.get_or_init(|| m.bounding_lines(level));
+                let lines = bounding.get_or_init(|| m.room_lines(level));
                 let region = geom::region_at(lines, r.point, TOL);
                 let area = region.as_ref().map_or_else(
                     || m.language.word(msg!("NOT ENCLOSED")).to_string(),

@@ -622,7 +622,7 @@ msgstr "Línea de contorno: dibujar la huella de la cubierta, en el nivel superi
 msgid "Boundary Line: sketch the shaft opening's outline"
 msgstr "Línea de contorno: dibujar el contorno del hueco de patinillo"
 
-#: crates/core/src/model.rs:1937
+#: crates/core/src/model.rs:1959
 msgid "Brick"
 msgstr "Ladrillo"
 
@@ -801,7 +801,7 @@ msgstr "Centro"
 msgid "Centre Lines"
 msgstr "Líneas de eje"
 
-#: crates/core/src/model.rs:1945
+#: crates/core/src/model.rs:1967
 msgid "Ceramic tile"
 msgstr "Baldosa cerámica"
 
@@ -1392,7 +1392,7 @@ msgstr "Masa conceptual"
 msgid "Concrete"
 msgstr "Hormigón"
 
-#: crates/core/src/model.rs:1939
+#: crates/core/src/model.rs:1961
 msgid "Concrete block"
 msgstr "Bloque de hormigón"
 
@@ -1449,7 +1449,7 @@ msgstr "{} GlobalId IFC copiados."
 msgid "Copied {} rows, tab-separated."
 msgstr "{} filas copiadas, separadas por tabulación."
 
-#: crates/core/src/model.rs:1953
+#: crates/core/src/model.rs:1975
 msgid "Copper"
 msgstr "Cobre"
 
@@ -1796,7 +1796,7 @@ msgstr "Demoler (DW): haga clic en un elemento para demolerlo en la fase de la v
 msgid "Demolished"
 msgstr "Demolido"
 
-#: crates/core/src/commands.rs:5568
+#: crates/core/src/commands.rs:5569
 msgid "Dependent"
 msgstr "Dependiente"
 
@@ -2170,7 +2170,7 @@ msgstr "Equipo eléctrico"
 msgid "Electrical Equipment (EE): a distribution board, where you click on the wall; Space turns it"
 msgstr "Equipo eléctrico (EE): un cuadro de distribución, donde hagas clic en el muro; Espacio lo gira"
 
-#: crates/core/src/commands.rs:1319
+#: crates/core/src/commands.rs:1320
 msgid "Elements"
 msgstr "Elementos"
 
@@ -2733,7 +2733,7 @@ msgstr "Grupo"
 msgid "Group:"
 msgstr "Grupo:"
 
-#: crates/core/src/model.rs:1944
+#: crates/core/src/model.rs:1966
 msgid "Gypsum board"
 msgstr "Placa de yeso"
 
@@ -3459,7 +3459,7 @@ msgstr "Maximizar"
 msgid "Maximum Riser Height"
 msgstr "Altura máxima de contrahuella"
 
-#: crates/core/src/commands.rs:1272
+#: crates/core/src/commands.rs:1273
 msgid "Measure"
 msgstr "Medir"
 
@@ -4978,7 +4978,7 @@ msgstr "Cubierta por cara (RB): una cubierta en la cara superior de las masas se
 msgid "Roof by Footprint: click inside the walls to roof them, on the level above"
 msgstr "Cubierta por perímetro: haz clic dentro de los muros para cubrirlos, en el nivel superior"
 
-#: crates/core/src/model.rs:1946
+#: crates/core/src/model.rs:1968
 msgid "Roof tiles"
 msgstr "Tejas"
 
@@ -5084,7 +5084,7 @@ msgstr "Escala: el papel que esta vista representa, 1 : n del modelo: su anotaci
 msgid "Scan"
 msgstr "Escaneo"
 
-#: crates/core/src/commands.rs:1135
+#: crates/core/src/commands.rs:1136
 msgid "Schedule"
 msgstr "Tabla"
 
@@ -5114,7 +5114,7 @@ msgstr "Tablas"
 msgid "Schedules/Quantities (all)"
 msgstr "Tablas/cantidades (todas)"
 
-#: crates/core/src/model.rs:1942
+#: crates/core/src/model.rs:1964
 msgid "Screed"
 msgstr "Recrecido"
 
@@ -6227,7 +6227,7 @@ msgstr "Mostrar elementos"
 msgid "Units"
 msgstr "Unidades"
 
-#: crates/core/src/commands.rs:5709
+#: crates/core/src/commands.rs:5710
 msgid "Unnamed"
 msgstr "Sin nombre"
 

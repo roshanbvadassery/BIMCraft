@@ -622,7 +622,7 @@ msgstr "边界线：在上一标高绘制屋顶的迹线及其中的天井"
 msgid "Boundary Line: sketch the shaft opening's outline"
 msgstr "边界线：绘制竖井洞口的轮廓"
 
-#: crates/core/src/model.rs:1937
+#: crates/core/src/model.rs:1959
 msgid "Brick"
 msgstr "砖"
 
@@ -801,7 +801,7 @@ msgstr "中心"
 msgid "Centre Lines"
 msgstr ""
 
-#: crates/core/src/model.rs:1945
+#: crates/core/src/model.rs:1967
 msgid "Ceramic tile"
 msgstr "瓷砖"
 
@@ -1392,7 +1392,7 @@ msgstr "概念体量"
 msgid "Concrete"
 msgstr "混凝土"
 
-#: crates/core/src/model.rs:1939
+#: crates/core/src/model.rs:1961
 msgid "Concrete block"
 msgstr "混凝土砌块"
 
@@ -1449,7 +1449,7 @@ msgstr "已复制 {} 个 IFC GlobalId。"
 msgid "Copied {} rows, tab-separated."
 msgstr "已复制 {} 行，以制表符分隔。"
 
-#: crates/core/src/model.rs:1953
+#: crates/core/src/model.rs:1975
 msgid "Copper"
 msgstr "铜"
 
@@ -1796,7 +1796,7 @@ msgstr "拆除 (DW)：单击图元，在视图阶段中将其拆除；再次单�
 msgid "Demolished"
 msgstr "已拆除"
 
-#: crates/core/src/commands.rs:5568
+#: crates/core/src/commands.rs:5569
 msgid "Dependent"
 msgstr "相关"
 
@@ -2170,7 +2170,7 @@ msgstr "电气设备"
 msgid "Electrical Equipment (EE): a distribution board, where you click on the wall; Space turns it"
 msgstr "电气设备 (EE)：在墙上单击处放置配电箱；按空格键旋转"
 
-#: crates/core/src/commands.rs:1319
+#: crates/core/src/commands.rs:1320
 msgid "Elements"
 msgstr "图元"
 
@@ -2733,7 +2733,7 @@ msgstr "组"
 msgid "Group:"
 msgstr "组："
 
-#: crates/core/src/model.rs:1944
+#: crates/core/src/model.rs:1966
 msgid "Gypsum board"
 msgstr "石膏板"
 
@@ -3459,7 +3459,7 @@ msgstr "最大化"
 msgid "Maximum Riser Height"
 msgstr "最大踢面高度"
 
-#: crates/core/src/commands.rs:1272
+#: crates/core/src/commands.rs:1273
 msgid "Measure"
 msgstr "测量"
 
@@ -4978,7 +4978,7 @@ msgstr "面屋顶 (RB)：在所选体量的顶面上创建屋顶"
 msgid "Roof by Footprint: click inside the walls to roof them, on the level above"
 msgstr "迹线屋顶：单击墙内部，在上一标高为其创建屋顶"
 
-#: crates/core/src/model.rs:1946
+#: crates/core/src/model.rs:1968
 msgid "Roof tiles"
 msgstr "屋面瓦"
 
@@ -5084,7 +5084,7 @@ msgstr "比例：此视图所代表的图纸，为模型的 1 : n；其注释和
 msgid "Scan"
 msgstr "扫描"
 
-#: crates/core/src/commands.rs:1135
+#: crates/core/src/commands.rs:1136
 msgid "Schedule"
 msgstr "明细表"
 
@@ -5114,7 +5114,7 @@ msgstr "明细表"
 msgid "Schedules/Quantities (all)"
 msgstr "明细表/数量（全部）"
 
-#: crates/core/src/model.rs:1942
+#: crates/core/src/model.rs:1964
 msgid "Screed"
 msgstr "找平层"
 
@@ -6227,7 +6227,7 @@ msgstr "取消隐藏图元"
 msgid "Units"
 msgstr "单位"
 
-#: crates/core/src/commands.rs:5709
+#: crates/core/src/commands.rs:5710
 msgid "Unnamed"
 msgstr "未命名"
 
