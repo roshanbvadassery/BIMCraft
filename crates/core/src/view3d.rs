@@ -941,6 +941,11 @@ impl Scene {
         Scene { tris, planes, smooth, faces: Arc::new(faces), skins, bases, masses, levels, scans, edges: OnceLock::new() }
     }
 
+    /// Each triangle of the model's surfaces: its corners (mm, z up), its element and its colour, for exports.
+    pub fn triangles(&self) -> impl Iterator<Item = ([P3; 3], Id, Rgb)> + '_ {
+        self.tris.iter().map(|t| (t.p, t.owner, t.color))
+    }
+
     /// A view of the whole model from `azimuth` and `elevation` (degrees), fitted into the picture.
     pub fn fit(&self, azimuth: f64, elevation: f64, width: u32, height: u32) -> Camera {
         self.fit_in(azimuth, elevation, width, height, &Look::default())

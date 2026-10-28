@@ -107,7 +107,7 @@ pub static ALL: &[Command] = &[
     other(
         "save",
         "Save",
-        "{path?} .bimcraft saves the project (Save As with a path); .ifc exports IFC4; .svg or .png exports the lowest level's \
+        "{path?} .bimcraft saves the project (Save As with a path); .ifc exports IFC4; .glb exports the 3D model (glTF, metres, y up, a node per category); .svg or .png exports the lowest level's \
          plan; .pdf prints every sheet, a page each",
         save,
     ),
@@ -2186,6 +2186,11 @@ fn save(s: &mut Session, p: &Value) -> R {
     if format == "ifc" {
         std::fs::write(&path, crate::ifc::export(&s.model)).map_err(|e| bad(c, format!("{}: {e}", path.display())))?;
         return Ok(json!({"path": path, "format": "IFC4"}));
+    }
+    if format == "glb" {
+        let bytes = crate::glb::export(&crate::link::seen(&s.model)).map_err(|e| bad(c, e))?;
+        std::fs::write(&path, &bytes).map_err(|e| bad(c, format!("{}: {e}", path.display())))?;
+        return Ok(json!({"path": path, "format": "glTF", "bytes": bytes.len()}));
     }
     if format == "pdf" {
         let seen = crate::link::seen(&s.model);
