@@ -1796,7 +1796,7 @@ msgstr ""
 msgid "Demolished"
 msgstr ""
 
-#: crates/core/src/commands.rs:5536
+#: crates/core/src/commands.rs:5547
 msgid "Dependent"
 msgstr ""
 
@@ -6227,7 +6227,7 @@ msgstr ""
 msgid "Units"
 msgstr ""
 
-#: crates/core/src/commands.rs:5677
+#: crates/core/src/commands.rs:5688
 msgid "Unnamed"
 msgstr ""
 

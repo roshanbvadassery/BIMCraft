@@ -1796,7 +1796,7 @@ msgstr "拆除 (DW)：单击图元，在视图阶段中将其拆除；再次单�
 msgid "Demolished"
 msgstr "已拆除"
 
-#: crates/core/src/commands.rs:5536
+#: crates/core/src/commands.rs:5547
 msgid "Dependent"
 msgstr "相关"
 
@@ -6227,7 +6227,7 @@ msgstr "取消隐藏图元"
 msgid "Units"
 msgstr "单位"
 
-#: crates/core/src/commands.rs:5677
+#: crates/core/src/commands.rs:5688
 msgid "Unnamed"
 msgstr "未命名"
 
